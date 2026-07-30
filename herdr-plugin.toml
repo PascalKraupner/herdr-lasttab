@@ -1,0 +1,19 @@
+id = "lasttab"
+name = "lasttab"
+version = "0.1.0"
+min_herdr_version = "0.7.5"
+description = "Per-workspace last-used tab toggle, the equivalent of tmux last-window"
+platforms = ["linux", "macos"]
+
+# Records every tab focus so the toggle knows where to go back to. herdr's own
+# last_pane binding is a single global MRU; this keeps one pair per workspace so
+# tab toggling and workspace toggling stay independent.
+[[events]]
+on = "tab.focused"
+command = ["bin/lasttab.js", "record"]
+
+[[actions]]
+id = "toggle"
+title = "Last tab"
+contexts = ["workspace"]
+command = ["bin/lasttab.js", "toggle"]
