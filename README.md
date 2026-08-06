@@ -1,11 +1,11 @@
 # herdr-lasttab
 
-Per-workspace last-used tab toggle for [herdr](https://herdr.dev). The
-equivalent of tmux's `last-window`.
+Last-used tab and workspace toggles for [herdr](https://herdr.dev). The
+equivalents of tmux's `last-window` and `switch-client -l`.
 
-herdr ships exactly one MRU binding, `last_pane`, and it is global. This keeps a
-separate most-recently-used pair **per workspace**, so toggling tabs and
-toggling workspaces stay independent the way they were in tmux.
+herdr's `last_pane` is a single global pane MRU and cannot back either toggle.
+This plugin keeps a tab pair per workspace and a separate workspace pair, so
+the two toggles cannot overwrite each other's state.
 
 ## Install
 
@@ -24,6 +24,11 @@ toggle_sidebar = "prefix+shift+b"
 key = "prefix+b"
 type = "shell"
 command = "herdr plugin action invoke toggle --plugin lasttab"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "shell"
+command = "herdr plugin action invoke toggle-workspace --plugin lasttab"
 ```
 
 ## Requirements
@@ -33,12 +38,14 @@ the shebang in `bin/lasttab.js` if you prefer node.
 
 ## How it works
 
-A `tab.focused` event hook records the previously focused tab per workspace into
-`$HERDR_PLUGIN_STATE_DIR/mru.json`, and an action reads it back and calls
-`herdr tab focus`. Writes are atomic, since focus events can arrive back to back.
+A `tab.focused` event hook records the previously focused tab per workspace in
+`$HERDR_PLUGIN_STATE_DIR/mru.json`. A `workspace.focused` hook keeps the global
+workspace pair in `workspace-mru.json`. The actions read those files and call
+`herdr tab focus` or `herdr workspace focus`. Writes are atomic because focus
+events can arrive back to back.
 
-Refocusing the tab you are already on is ignored, or the toggle would degenerate
-into a no-op. If the remembered tab has been closed, the toggle fails once with a
+Refocusing the current tab or workspace is ignored, or the toggle would become
+a no-op. If a remembered target has been closed, the toggle fails once with a
 message and clears the stale pointer rather than failing forever.
 
 ## License
