@@ -1,20 +1,18 @@
 id = "lasttab"
 name = "lasttab"
-version = "0.1.0"
-min_herdr_version = "0.7.5"
+version = "0.2.0"
+min_herdr_version = "0.9.0"
 description = "Last-used tab and workspace toggles, the equivalents of tmux last-window and switch-client -l"
 platforms = ["linux", "macos"]
 
-# Records every tab focus so the toggle knows where to go back to. herdr's own
-# last_pane is a single global *pane* MRU, and `herdr tab focus` overwrites it,
-# so it cannot back either toggle. Both are kept here, in separate state files.
-[[events]]
-on = "tab.focused"
-command = ["bin/lasttab.js", "record"]
-
-[[events]]
-on = "workspace.focused"
-command = ["bin/lasttab.js", "record-workspace"]
+# herdr 0.9.0 made tab/workspace focus client-local: client-driven switches no
+# longer run tab.focused/workspace.focused event hooks (those fire only when an
+# API call changes the canonical focus). A watcher process polls the canonical
+# focus instead; the startup hook spawns it and every toggle respawns it if it
+# died. Both MRU pairs live in separate state files so they cannot clobber
+# each other.
+[[startup]]
+command = ["bin/lasttab.js", "ensure-watcher"]
 
 [[actions]]
 id = "toggle"
