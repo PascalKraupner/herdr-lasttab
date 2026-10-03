@@ -1,6 +1,6 @@
 id = "lasttab"
 name = "lasttab"
-version = "0.2.0"
+version = "0.2.1"
 min_herdr_version = "0.9.0"
 description = "Last-used tab and workspace toggles, the equivalents of tmux last-window and switch-client -l"
 platforms = ["linux", "macos"]

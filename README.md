@@ -7,8 +7,8 @@ herdr's `last_pane` is a single global pane MRU and cannot back either toggle.
 This plugin keeps a tab pair per workspace and a separate workspace pair, so
 the two toggles cannot overwrite each other's state.
 
-Requires herdr 0.9.0 or newer. For herdr 0.7.5 to 0.8.x, install the last
-0.1.x release of this plugin instead.
+Requires herdr 0.9.0 or newer, Git, and [Bun](https://bun.sh).
+Supports Linux and macOS. Tested with herdr 0.9.3.
 
 ## Install
 
@@ -41,8 +41,8 @@ stops working. Run `herdr server reload-config` after changing bindings.
 
 ## Requirements
 
-`bun` or `node`. The script uses only `node:` imports, so either works; change
-the shebang in `bin/lasttab.js` if you prefer node.
+[Bun](https://bun.sh) must be on `PATH`. No packages or build step are needed.
+The source uses Node's standard library, but the executable entrypoint uses Bun.
 
 ## How it works
 
@@ -84,6 +84,16 @@ bun test
 The toggle commands run end-to-end against a fake `herdr` binary via
 `HERDR_BIN_PATH`, and the watcher against a fake herdr socket via
 `HERDR_SOCKET_PATH`.
+
+## Update or remove
+
+Re-run the install command to update. To remove it:
+
+```bash
+herdr plugin uninstall lasttab
+```
+
+Tested against herdr 0.9.3. Herdr has no built-in per-workspace last-tab toggle.
 
 ## License
 
